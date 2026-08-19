@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>100个句子记完7000个雅思单词 · 词汇</title>
+<link rel="stylesheet" href="../assets/css/ielts.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="inner">
+    <div class="brand"><span class="logo">雅</span> 雅思通关</div>
+    <nav class="nav">
+      <a href="../index.html">首页</a>
+      <a href="index.html">词汇</a>
+      <a href="../listening.html">听力</a>
+      <a href="../reading.html">阅读</a>
+      <a href="../speaking.html">口语</a>
+      <a href="../writing.html">写作</a>
+      <a href="../tests.html">真题</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <div id="app-reminder" class="reminder" style="display:none"></div>
+  <div id="app-header"></div>
+  <div id="app-tabs" class="tabs"></div>
+  <div id="app-panels">
+    <div class="panel" id="panel-browse"></div>
+    <div class="panel" id="panel-flash"></div>
+    <div class="panel" id="panel-spell"></div>
+    <div class="panel" id="panel-wrong"></div>
+    <div class="panel" id="panel-progress"></div>
+  </div>
+</div>
+
+<footer class="site">雅思通关 · 词汇 ｜ 100个句子记完7000个雅思单词（俞敏洪）</footer>
+
+<script src="../data/book1.js"></script>
+<script src="../assets/js/study-tools.js"></script>
+<script>
+  IELTS.AUDIO_BASE = "../audio/";
+  var app = new IELTS.VocabApp({
+    bookId: "book1",
+    data: window.IELTS_BOOK1,
+    type: "sentence",
+    feature: "句子记忆法：以 100 个经典长难句为线索串联核心词汇，配套语法笔记、核心词表与主题归纳。"
+  });
+  app.render();
+</script>
+</body>
+</html>

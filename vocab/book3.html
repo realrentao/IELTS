@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>雅思词汇词根+联想记忆法 · 词汇</title>
+<link rel="stylesheet" href="../assets/css/ielts.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="inner">
+    <div class="brand"><span class="logo">雅</span> 雅思通关</div>
+    <nav class="nav">
+      <a href="../index.html">首页</a>
+      <a href="index.html">词汇</a>
+      <a href="../listening.html">听力</a>
+      <a href="../reading.html">阅读</a>
+      <a href="../speaking.html">口语</a>
+      <a href="../writing.html">写作</a>
+      <a href="../tests.html">真题</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <div id="app-reminder" class="reminder" style="display:none"></div>
+  <div id="app-header"></div>
+  <div id="app-tabs" class="tabs"></div>
+  <div id="app-panels">
+    <div class="panel" id="panel-browse"></div>
+    <div class="panel" id="panel-flash"></div>
+    <div class="panel" id="panel-spell"></div>
+    <div class="panel" id="panel-wrong"></div>
+    <div class="panel" id="panel-progress"></div>
+  </div>
+</div>
+
+<footer class="site">雅思通关 · 词汇 ｜ 雅思词汇词根+联想记忆法（俞敏洪）</footer>
+
+<script src="../data/book3.js"></script>
+<script src="../assets/js/study-tools.js"></script>
+<script>
+  IELTS.AUDIO_BASE = "../audio/";
+  var app = new IELTS.VocabApp({
+    bookId: "book3",
+    data: window.IELTS_BOOK3,
+    type: "root",
+    feature: "OCR 识别原书全文：按原书 48 个 Word List 单元收录，每条含词根拆解/联想记忆与例句。"
+  });
+  app.render();
+</script>
+</body>
+</html>
