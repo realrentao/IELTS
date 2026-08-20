@@ -254,10 +254,6 @@
     this._renderHeader();
     this._renderTabs();
     this._renderBrowse();
-    this._renderFlash();
-    this._renderSpell();
-    this._renderWrong();
-    this._renderProgress();
     this._showReminder();
     this._activateTab("browse");
   };
@@ -312,24 +308,73 @@
     var panels = document.getElementById("app-panels").children;
     for (var j = 0; j < panels.length; j++)
       panels[j].classList.toggle("active", panels[j].id === "panel-" + name);
-    if (name === "wrong") this._renderWrong();
-    if (name === "progress") this._renderProgress();
+    if (name === "flash") {
+      var fp = document.getElementById("panel-flash");
+      if (!fp.dataset.built) this._renderFlash();
+    } else if (name === "spell") {
+      var sp = document.getElementById("panel-spell");
+      if (!sp.dataset.built) this._renderSpell();
+    } else if (name === "wrong") {
+      this._renderWrong();
+    } else if (name === "progress") {
+      this._renderProgress();
+    }
   };
 
-  /* ---------- 浏览 ---------- */
+  /* ---------- 浏览（虚拟滚动：仅渲染可见区块，首屏不建几千个 DOM） ---------- */
   VocabApp.prototype._renderBrowse = function () {
     var panel = document.getElementById("panel-browse");
     panel.innerHTML = "";
     var self = this;
-    if (this.type === "sentence") {
-      this.data.sentences.forEach(function (s) {
-        panel.appendChild(self._sentenceBlock(s));
-      });
-    } else {
-      this.data.chapters.forEach(function (ch) {
-        panel.appendChild(self._chapterBlock(ch));
-      });
+    var items = this.type === "sentence" ? this.data.sentences : this.data.chapters;
+    var io = null;
+    if ("IntersectionObserver" in window) {
+      io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) {
+            var sec = e.target;
+            if (!sec.dataset.built) self._buildSection(sec);
+            io.unobserve(sec);
+          }
+        });
+      }, { root: null, rootMargin: "400px 0px", threshold: 0.01 });
     }
+    items.forEach(function (it, idx) {
+      var shell = self._makeSectionShell(it, idx);
+      panel.appendChild(shell);
+      if (io) io.observe(shell); else self._buildSection(shell);
+    });
+    // 首屏立即构建第一个区块，保证有内容可见
+    var first = panel.firstChild;
+    if (first && !first.dataset.built) {
+      self._buildSection(first);
+      if (io) io.unobserve(first);
+    }
+  };
+
+  VocabApp.prototype._makeSectionShell = function (it, idx) {
+    var shell;
+    if (this.type === "sentence") {
+      shell = el("div", "sentence-block shell");
+      shell.style.minHeight = "92px";
+    } else {
+      shell = el("div", "chapter-block shell");
+      var title = el("div", "ch-title", IELTS.escapeHtml(it.title) +
+        ' <span class="gcount">（' + it.words.length + " 词）</span>");
+      shell.appendChild(title);
+    }
+    shell.dataset.idx = idx;
+    return shell;
+  };
+
+  VocabApp.prototype._buildSection = function (sec) {
+    var idx = +sec.dataset.idx;
+    var built = this.type === "sentence"
+      ? this._sentenceBlock(this.data.sentences[idx])
+      : this._chapterBlock(this.data.chapters[idx]);
+    built.dataset.idx = idx;
+    built.dataset.built = "1";
+    if (sec.parentNode) sec.parentNode.replaceChild(built, sec);
   };
 
   VocabApp.prototype._sentenceBlock = function (s) {
@@ -424,6 +469,7 @@
     ctrls.appendChild(bNo); ctrls.appendChild(bYes);
     area.appendChild(card); area.appendChild(prog); area.appendChild(ctrls);
     panel.appendChild(area);
+    panel.dataset.built = "1";
 
     var order = this.WORDS.slice();
     function next() {
@@ -478,6 +524,7 @@
     ctrls.appendChild(bShow); ctrls.appendChild(bNext);
     area.appendChild(mean); area.appendChild(row); area.appendChild(fb); area.appendChild(ctrls);
     panel.appendChild(area);
+    panel.dataset.built = "1";
 
     var queue = this.WORDS.slice(), idx = 0, cur = null, answered = false;
     function norm(s) { return (s || "").trim().toLowerCase().replace(/[\s\-'.]/g, ""); }
