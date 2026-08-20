@@ -8,7 +8,7 @@
 (function () {
   "use strict";
   var IELTS = (window.IELTS = window.IELTS || {});
-  IELTS.AUDIO_BASE = IELTS.AUDIO_BASE || "../audio/";
+  IELTS.AUDIO_BASE = IELTS.AUDIO_BASE || "https://cdn.jsdelivr.net/gh/realrentao/IELTS@main/audio/";
 
   /* ---------- 同步 SHA1（与 Python hashlib.sha1 一致） ---------- */
   function sha1(str) {
